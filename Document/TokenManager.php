@@ -15,6 +15,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use FOS\OAuthServerBundle\Model\TokenInterface;
 use FOS\OAuthServerBundle\Model\TokenManager as BaseTokenManager;
+use MongoDB\DeleteResult;
 
 class TokenManager extends BaseTokenManager
 {
@@ -79,6 +80,9 @@ class TokenManager extends BaseTokenManager
      */
     public function deleteExpired()
     {
+        /**
+         * @var DeleteResult $result
+         */
         $result = $this
             ->repository
             ->createQueryBuilder()
@@ -87,6 +91,6 @@ class TokenManager extends BaseTokenManager
             ->getQuery(array('safe' => true))
             ->execute();
 
-        return $result['n'];
+        return $result->getDeletedCount();
     }
 }

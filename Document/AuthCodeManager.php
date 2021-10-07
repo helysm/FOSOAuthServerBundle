@@ -15,6 +15,7 @@ use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use FOS\OAuthServerBundle\Model\AuthCodeInterface;
 use FOS\OAuthServerBundle\Model\AuthCodeManager as BaseAuthCodeManager;
+use MongoDB\DeleteResult;
 
 class AuthCodeManager extends BaseAuthCodeManager
 {
@@ -79,6 +80,9 @@ class AuthCodeManager extends BaseAuthCodeManager
      */
     public function deleteExpired()
     {
+        /**
+         * @var DeleteResult $result
+         */
         $result = $this
             ->repository
             ->createQueryBuilder()
@@ -87,6 +91,6 @@ class AuthCodeManager extends BaseAuthCodeManager
             ->getQuery(array('safe' => true))
             ->execute();
 
-        return $result['n'];
+        return $result->getDeletedCount();
     }
 }
